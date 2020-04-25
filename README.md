@@ -1,6 +1,6 @@
 # scheme_interpreter
 
-Basic scheme interpreter in **Python**
+Basic **Scheme** interpreter in **Python**
 
 ![Screen](https://raw.githubusercontent.com/jluispcardenas/scheme_interpreter/master/ss.png)
 
