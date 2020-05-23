@@ -1,6 +1,6 @@
 ##  JL Cardenas
 ##  Author jluis.pcardenas@gmail.com
-import pair
+from pair import Pair
 
 class Utils:
 
@@ -9,11 +9,11 @@ class Utils:
 
   @staticmethod
   def is_atom(o):
-    return isinstance(o, pair.Pair) == False
+    return isinstance(o, Pair) == False
   
   @staticmethod
   def get_type(o):
-	  if isinstance(o, pair.Pair):
+	  if isinstance(o, Pair):
 		  return "pair"
 	  elif isinstance(o, str):
 		  return "atom"
@@ -28,7 +28,7 @@ class Utils:
       return ""
     elif Utils.is_atom(o):
       return str(o)
-    elif isinstance(o, pair.Pair):
+    elif isinstance(o, Pair):
       p = o
       res = Utils.stringtify(p.car)
       scdr = Utils.string_content(Utils.stringtify(p.cdr), '(', ')')

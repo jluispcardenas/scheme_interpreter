@@ -1,12 +1,12 @@
 ##  JL Cardenas
 ##  Author jluis.pcardenas@gmail.com
 import scheme
-import procedure
-import pair
-import closure
-import utils
+from procedure import Procedure
+from pair import Pair
+from closure import Closure
+from utils import Utils
 
-class Native (procedure.Procedure):
+class Native (Procedure):
 
   def __init__(self, id, proc, min, max = -1):
     self.id = id
@@ -28,16 +28,16 @@ class Native (procedure.Procedure):
 
   @staticmethod
   def check_argument_type(m, cl, arg0):
-    if isinstance(arg0, cl) == False:
+    if not isinstance(arg0, cl):
         raise ValueError("error in '%s': expected type '%s', got '%s'" % (m, cl, arg0))
 
   @staticmethod
   def apply(args, env):
     proc = Native.ARG(args)
-    Native.check_argument_type("apply", procedure.Procedure, proc) 
+    Native.check_argument_type("apply", Procedure, proc) 
 	  
     arg0 = Native.ARG(args)
-    Native.check_argument_type("apply", pair.Pair, arg0) 
+    Native.check_argument_type("apply", Pair, arg0) 
     
     nargs = scheme.Scheme.va_list(arg0, env, False)
 
@@ -50,15 +50,15 @@ class Native (procedure.Procedure):
   @staticmethod
   def car(args, env):
     val = args.pop(0)
-    if isinstance(val, pair.Pair) == False:
-      raise ValueError("error in car: expected type pair, got '%s'." % (utils.Utils.get_type(val)))
+    if not isinstance(val, Pair):
+      raise ValueError("error in car: expected type pair, got '%s'." % (Utils.get_type(val)))
 	
     return val.car
 
   @staticmethod
   def cdr(args, env):
     val = args.pop(0)
-    Native.check_argument_type("cdr", pair.Pair, val)
+    Native.check_argument_type("cdr", Pair, val)
   
     return val.cdr
 
@@ -67,7 +67,7 @@ class Native (procedure.Procedure):
 	  arg0 = Native.ARG(args)
 	  arg1 = Native.ARG(args)
 
-	  return pair.Pair(arg0, arg1)
+	  return Pair(arg0, arg1)
 
   @staticmethod
   def define(args, env):
@@ -78,7 +78,7 @@ class Native (procedure.Procedure):
       name = arg0
       env.set(name, scheme.Scheme.evaluate(arg1, env))
       return name
-    elif isinstance(arg0, pair.Pair):
+    elif isinstance(arg0, Pair):
       name = arg0.car
       lst = [arg0.cdr, arg1]
       env.set(name, Native.call_native("lambda", lst, env))
@@ -88,7 +88,7 @@ class Native (procedure.Procedure):
 
   @staticmethod
   def display(args, env):
-    print(utils.Utils.stringtify(args))
+    print(Utils.stringtify(args))
     return None
 
   @staticmethod
@@ -100,9 +100,9 @@ class Native (procedure.Procedure):
     arg0 = Native.ARG(args)
     arg1 = Native.ARG(args)
   
-    if utils.Utils.get_type(arg0) != utils.Utils.get_type(arg1):
+    if Utils.get_type(arg0) != Utils.get_type(arg1):
       return False
-    elif isinstance(arg0, pair.Pair):
+    elif isinstance(arg0, Pair):
       la1 = [arg0]
       la2 = [arg1]
 
@@ -146,7 +146,7 @@ class Native (procedure.Procedure):
     arg0 = Native.ARG(args)
     arg1 = Native.ARG(args)
   
-    return closure.Closure(arg0, arg1, env)
+    return Closure(arg0, arg1, env)
 
   @staticmethod
   def load(args, env):
@@ -156,8 +156,7 @@ class Native (procedure.Procedure):
     path = val
     try:
       with open(path) as f:
-        pass
-        #Scheme.read_input(f, None, env)
+        scheme.Scheme.read_input(f.read(), None, env)
     except:
       raise ValueError("unable to open file %s" % (val))
       
@@ -166,11 +165,11 @@ class Native (procedure.Procedure):
   @staticmethod
   def length(args, env):
     val = args.pop(0)
-    Native.check_argument_type("length", pair.Pair, val)
+    Native.check_argument_type("length", Pair, val)
     
     p = val
     len = 0
-    while isinstance(p, pair.Pair) and p.car != None:
+    while isinstance(p, Pair) and p.car != None:
       len += 1
       p = p.cdr
       
@@ -183,22 +182,22 @@ class Native (procedure.Procedure):
     while len(args) > 0:
       o = Native.ARG(args)
       if p == None:
-        p = pair.Pair(o, None)
+        p = Pair(o, None)
         pt = p
       else:
-        pt.cdr = pair.Pair(o, None)
+        pt.cdr = Pair(o, None)
         pt = pt.cdr
     
     return p
 
   @staticmethod
   def islist(args, env):
-	  return isinstance(args.pop(0), pair.Pair)
+	  return isinstance(args.pop(0), Pair)
 
   @staticmethod
   def isnull(args, env):
     arg0 = Native.ARG(args)
-    if arg0 == None or isinstance(arg0, pair.Pair) and arg0.car == None:
+    if arg0 is None or isinstance(arg0, Pair) and arg0.car is None:
       return True
       
     return False

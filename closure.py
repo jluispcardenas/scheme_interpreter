@@ -1,10 +1,10 @@
 ##  JL Cardenas
 ##  Author jluis.pcardenas@gmail.com
 import scheme
-import enviroment
-import procedure
+from enviroment import Environment
+from procedure import Procedure
 
-class Closure (procedure.Procedure):
+class Closure (Procedure):
   Instances = 1
 
   def __init__(self, _args, code, env):
@@ -18,10 +18,12 @@ class Closure (procedure.Procedure):
   def invoke(self, args, env):
     _vars = scheme.Scheme.va_list(self.args, env, False)
 
-    if len(_vars) != len(args):
+    if len(_vars) == 1 and len(args) > 1:
+      args = args[:1]
+    elif len(_vars) != len(args):
       raise ValueError("Incorrect number of arguments for closure")
 
-    nenv = enviroment.Environment(_vars, args, env)
+    nenv = Environment(_vars, args, env)
     ret = scheme.Scheme.evaluate(self.code, nenv)
     self.memoized = True
     

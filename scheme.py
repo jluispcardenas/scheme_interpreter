@@ -5,9 +5,9 @@ from procedure import Procedure
 from utils import Utils
 from parse import Parse
 from pair import Pair
-import closure
+from closure import Closure
+from installPrim import InstallPrim
 import symbols
-import installPrim
 
 class Scheme:
   vSymbols = symbols.Symbols()
@@ -36,7 +36,7 @@ class Scheme:
       
       return Scheme.vSymbols.get(method).invoke(args, env)
 
-    elif isinstance(env.lookup(method), closure.Closure):
+    elif isinstance(env.lookup(method), Closure):
       proc = env.lookup(method)
       args = Scheme.va_list(arguments, env, True)
       
@@ -74,7 +74,7 @@ class Scheme:
         prefix = "..."
       
       exp += input(prefix)
-
+ 
       lp = exp.count('(')
       rp = exp.count(')')
       qn = exp.count('"')
@@ -98,7 +98,7 @@ class Scheme:
   def main():
     env = Environment([], [], None)
 
-    installPrim.InstallPrim.install()
+    InstallPrim.install()
 
     print("Scheme interpreter 0.010 by JLPC")
 

@@ -1,6 +1,6 @@
 ##  JL Cardenas
 ##  Author jluis.pcardenas@gmail.com
-import utils
+from utils import Utils
 
 class Environment:
   def __init__(self, _vars, vals, parent):
@@ -14,8 +14,8 @@ class Environment:
   def lookup(self, key):
     val = self.table.get(key, None)
 
-    if val == None:
-      if self.parent != None:
+    if val is None:
+      if self.parent is not None:
         return self.parent.lookup(key)
       else:
         raise ValueError("the name '%s' does not exist in the current context" % (key))
@@ -23,8 +23,8 @@ class Environment:
       return val
     	
   def set(self, k, val):
-    if isinstance(k, str) == False:
-      raise ValueError("Error to set symbol: " % utils.Utils.stringtify(k))
+    if not isinstance(k, str):
+      raise ValueError("Error to set symbol: " % Utils.stringtify(k))
 	  
     self.table[k] = val
     
