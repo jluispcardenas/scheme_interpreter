@@ -1,5 +1,3 @@
-##  JL Cardenas
-##  Author jluis.pcardenas@gmail.com
 from lexer import Lexer
 from pair import Pair
 
@@ -42,7 +40,7 @@ class Parse:
       return Pair("quote", Parse.sexp(tokens))
     else:
       if o.isnumeric() or Parse.is_valid_decimal(o):
-        if ("." in o):
+        if "." in o:
           return float(o)
         else:
           return int(o)
@@ -62,8 +60,7 @@ class Parse:
   def next_list(tokens):
     cur = Parse.sexp(tokens)
     
-    p = None
-    pt = None
+    p = None, pt = None
     while len(tokens) > 0 and cur != None and cur != ")":
       if p == None:
         p = Pair(cur, None)

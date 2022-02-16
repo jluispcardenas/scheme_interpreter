@@ -1,5 +1,3 @@
-##  JL Cardenas
-##  Author jluis.pcardenas@gmail.com
 import scheme
 from procedure import Procedure
 from pair import Pair
@@ -13,15 +11,15 @@ class Native (Procedure):
     self.proc = proc
     self.min = min
     self.max = max
-    
+
   def to_string(self):
     return "#<procedure-%s>" % (self.id)
-   
+
   def invoke(self, args, env):
     if self.min != -1 and (self.max == -1 and len(args) != self.min):
       raise ValueError("error in %s: incorrect number of arguments to procedure." % (self.id))
 
-    if self.proc == None:
+    if not self.proc:
       return Native.binary_op(self.id, args, env)
 
     return self.proc(args, env)
@@ -34,11 +32,11 @@ class Native (Procedure):
   @staticmethod
   def apply(args, env):
     proc = Native.ARG(args)
-    Native.check_argument_type("apply", Procedure, proc) 
-	  
+    Native.check_argument_type("apply", Procedure, proc)
+
     arg0 = Native.ARG(args)
-    Native.check_argument_type("apply", Pair, arg0) 
-    
+    Native.check_argument_type("apply", Pair, arg0)
+
     nargs = scheme.Scheme.va_list(arg0, env, False)
 
     return proc.invoke(nargs, env)
@@ -52,14 +50,14 @@ class Native (Procedure):
     val = args.pop(0)
     if not isinstance(val, Pair):
       raise ValueError("error in car: expected type pair, got '%s'." % (Utils.get_type(val)))
-	
+
     return val.car
 
   @staticmethod
   def cdr(args, env):
     val = args.pop(0)
     Native.check_argument_type("cdr", Pair, val)
-  
+
     return val.cdr
 
   @staticmethod
@@ -73,7 +71,7 @@ class Native (Procedure):
   def define(args, env):
     arg0 = Native.ARG(args)
     arg1 = Native.ARG(args)
-    
+
     if isinstance(arg0, str):
       name = arg0
       env.set(name, scheme.Scheme.evaluate(arg1, env))
@@ -99,43 +97,28 @@ class Native (Procedure):
   def equal(args, env):
     arg0 = Native.ARG(args)
     arg1 = Native.ARG(args)
-  
+
     if Utils.get_type(arg0) != Utils.get_type(arg1):
       return False
     elif isinstance(arg0, Pair):
-      la1 = [arg0]
-      la2 = [arg1]
-
-      l =  Native.call_native("length", la1, env)
-      l2 = Native.call_native("length", la2, env)
-
-      if l == l2:
-        t = arg0
-        t2 = arg1
-        while t != None and t.car != None:
-          la = [t.car, t2.car]
-          if Native.call_native("equal?", la, env) == False:
-            return False
-          t = t.cdr
-          t2 = t2.cdr
-        
-        return True
-      else:
+      if arg0.car != arg1.car:
         return False
+
+      return Native.call_native("equal?", [arg0.cdr, arg1.cdr])
     else:
       return arg0 == arg1
-  
+
     return False
 
   @staticmethod
   def _if(args, env):
-    
+
     predicate = Native.ARG(args)
     proc1 = Native.ARG(args)
     proc2 = Native.ARG(args)
-    
+
     ret = scheme.Scheme.evaluate(predicate, env)
-    
+
     if ret:
       return scheme.Scheme.evaluate(proc1, env)
     else:
@@ -145,49 +128,48 @@ class Native (Procedure):
   def _lambda(args, env):
     arg0 = Native.ARG(args)
     arg1 = Native.ARG(args)
-  
+
     return Closure(arg0, arg1, env)
 
   @staticmethod
   def load(args, env):
     val = args.pop(0)
     Native.check_argument_type("load", str, val)
-    
+
     path = val
     try:
       with open(path) as f:
         scheme.Scheme.read_input(f.read(), None, env)
     except:
       raise ValueError("unable to open file %s" % (val))
-      
+
     return None
 
   @staticmethod
   def length(args, env):
     val = args.pop(0)
     Native.check_argument_type("length", Pair, val)
-    
+
     p = val
     len = 0
     while isinstance(p, Pair) and p.car != None:
       len += 1
       p = p.cdr
-      
+
     return len
 
   @staticmethod
   def list(args, env):
-    p = None
-    pt = None
+    p = None, pt = None
     while len(args) > 0:
       o = Native.ARG(args)
-      if p == None:
+      if not p:
         p = Pair(o, None)
         pt = p
       else:
         pt.cdr = Pair(o, None)
         pt = pt.cdr
-    
+
     return p
 
   @staticmethod
@@ -197,9 +179,9 @@ class Native (Procedure):
   @staticmethod
   def isnull(args, env):
     arg0 = Native.ARG(args)
-    if arg0 is None or isinstance(arg0, Pair) and arg0.car is None:
+    if not arg0 or isinstance(arg0, Pair) and not arg0.car:
       return True
-      
+
     return False
 
   @staticmethod
@@ -208,10 +190,10 @@ class Native (Procedure):
 
   @staticmethod
   def binary_op(op, args, env):
-    if op[0] == '<' and op[0] == '>' and op[1] == '=':
+    if op[0] == '<' or op[0] == '>' and len(op) == 1 or op[1] == '=':
       n1 = args.pop(0)
       n2 = args.pop(0)
-      
+
       if op == ">":
         return n1 > n2
       elif op == "<":
@@ -235,5 +217,5 @@ class Native (Procedure):
           n1 = n1 * n
         elif op == "/":
           n1 = n1 / n
-    
+
     return n1

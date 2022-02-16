@@ -1,17 +1,15 @@
-##  JL Cardenas
-##  Author jluis.pcardenas@gmail.com
 from enviroment import Environment
 from procedure import Procedure
 from utils import Utils
 from parse import Parse
 from pair import Pair
 from closure import Closure
-from installPrim import InstallPrim
+from primitives import Primitives
 import symbols
 
 class Scheme:
   vSymbols = symbols.Symbols()
-  
+
   @staticmethod
   def evaluate(exp, env):
     if Utils.is_atom(exp):
@@ -31,15 +29,15 @@ class Scheme:
   @staticmethod
   def apply(method, arguments, env):
     if Scheme.vSymbols.get(method) != None and isinstance(Scheme.vSymbols.get(method), Procedure):
-      specials = ["if", "define", "cond", "macro", "quote", "lambda"] 
+      specials = ["if", "define", "cond", "macro", "quote", "lambda"]
       args = Scheme.va_list(arguments, env, method not in specials)
-      
+
       return Scheme.vSymbols.get(method).invoke(args, env)
 
     elif isinstance(env.lookup(method), Closure):
       proc = env.lookup(method)
       args = Scheme.va_list(arguments, env, True)
-      
+
       return proc.invoke(args, env)
     else:
       raise ValueError("unknown procedure type -- %s" % (method))
@@ -48,12 +46,12 @@ class Scheme:
   def va_list(args, env, _eval):
     if args == None:
       return []
-    
+
     if _eval:
       car = Scheme.evaluate(args.car, env)
     else:
       car = args.car
-    
+
     lst = []
     lst.append(car)
 
@@ -72,9 +70,9 @@ class Scheme:
       prefix = "> "
       if len(exp) > 0:
         prefix = "..."
-      
+
       exp += input(prefix)
- 
+
       lp = exp.count('(')
       rp = exp.count(')')
       qn = exp.count('"')
@@ -84,7 +82,7 @@ class Scheme:
       elif lp == rp and (qn % 2) == 0:
         try:
           parsed = Parse.parse(exp)
-          
+
           result = Scheme.evaluate(parsed, env)
 
           if result != None:
@@ -93,7 +91,7 @@ class Scheme:
           print(str(e))
         finally:
           exp = ""
-  
+
   @staticmethod
   def main():
     env = Environment([], [], None)
@@ -104,4 +102,4 @@ class Scheme:
 
     Scheme.read_input(env)
 
-    return 1
+    return 0

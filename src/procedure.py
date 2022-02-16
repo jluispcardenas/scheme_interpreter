@@ -1,5 +1,3 @@
-##  JL Cardenas
-##  Author jluis.pcardenas@gmail.com
 import scheme
 import enviroment
 

@@ -1,5 +1,3 @@
-##  JL Cardenas
-##  Author jluis.pcardenas@gmail.com
 import scheme
 from enviroment import Environment
 from procedure import Procedure
@@ -14,7 +12,7 @@ class Closure (Procedure):
     self.id = Closure.Instances
     self.memoized = False
     Closure.Instances += 1
-  
+
   def invoke(self, args, env):
     _vars = scheme.Scheme.va_list(self.args, env, False)
 
@@ -26,5 +24,5 @@ class Closure (Procedure):
     nenv = Environment(_vars, args, env)
     ret = scheme.Scheme.evaluate(self.code, nenv)
     self.memoized = True
-    
-    return ret
+
+    return rets

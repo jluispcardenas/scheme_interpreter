@@ -1,8 +1,6 @@
 
-##  JL Cardenas
-##  Author jluis.pcardenas@gmail.com
 class Lexer:
-  
+
   @staticmethod
   def tokenize(exp):
     delimiters = [' ', '(', ')', '[', ']', '[', ']', '"', ',', '\'', '`', ';']
@@ -17,17 +15,17 @@ class Lexer:
         if len(buff) > 0:
           tokens.append(buff)
           buff = ""
-        
+
         if c != ' ':
           tokens.append(c)
-        
+
         if c == '(':
           opens += 1
         if c == ')':
           opens -= 1
       else:
         buff += c
-    
+
     if (opens != 0):
       raise ValueError("Unbalanced parens")
 

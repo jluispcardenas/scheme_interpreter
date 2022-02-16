@@ -10,7 +10,7 @@ class Utils:
   @staticmethod
   def is_atom(o):
     return isinstance(o, Pair) == False
-  
+
   @staticmethod
   def get_type(o):
 	  if isinstance(o, Pair):
@@ -20,11 +20,11 @@ class Utils:
 	  elif isinstance(o, str) and (o == '#f' or o == '#t'):
 		  return "boolean"
 	  else:
-		  return "undefined"    
+		  return "undefined"
 
   @staticmethod
   def stringtify(o):
-    if o == None:
+    if o is None:
       return ""
     elif Utils.is_atom(o):
       return str(o)

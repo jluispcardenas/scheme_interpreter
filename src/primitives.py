@@ -1,9 +1,7 @@
-##  JL Cardenas
-##  Author jluis.pcardenas@gmail.com
 from symbols import Symbols
 from native import Native
 
-class InstallPrim:
+class Primitives:
 
   @staticmethod
   def install():
