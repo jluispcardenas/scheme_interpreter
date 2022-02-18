@@ -1,4 +1,4 @@
-from utils import Utils
+from .utils import *
 
 class Pair:
     def __init__(self, car, cdr):
@@ -6,5 +6,4 @@ class Pair:
 	    self.cdr = cdr
 
     def to_string(self):
-      Utils.stringtify(self)
-
+      utils.Utils.stringtify(self)

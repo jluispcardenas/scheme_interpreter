@@ -1,14 +1,14 @@
-from enviroment import Environment
-from procedure import Procedure
-from utils import Utils
-from parse import Parse
-from pair import Pair
-from closure import Closure
-from primitives import Primitives
-import symbols
+from .enviroment import Environment
+from .procedure import Procedure
+from .utils import Utils
+from .parse import Parse
+from .pair import Pair
+from .closure import Closure
+from .primitives import *
+from .symbols import *
 
 class Scheme:
-  vSymbols = symbols.Symbols()
+  vSymbols = Symbols()
 
   @staticmethod
   def evaluate(exp, env):
@@ -88,18 +88,6 @@ class Scheme:
           if result != None:
             print(">> " + Utils.stringtify(result) + "\r\n")
         except ValueError as e:
-          print(str(e))
+          print(str(e) +  exp)
         finally:
           exp = ""
-
-  @staticmethod
-  def main():
-    env = Environment([], [], None)
-
-    InstallPrim.install()
-
-    print("Scheme interpreter 0.010 by JLPC")
-
-    Scheme.read_input(env)
-
-    return 0

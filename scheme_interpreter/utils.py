@@ -1,6 +1,6 @@
 ##  JL Cardenas
 ##  Author jluis.pcardenas@gmail.com
-from pair import Pair
+from .pair import Pair
 
 class Utils:
 

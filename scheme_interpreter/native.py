@@ -1,8 +1,9 @@
-import scheme
-from procedure import Procedure
-from pair import Pair
-from closure import Closure
-from utils import Utils
+from .scheme import Scheme
+from .procedure import Procedure
+from .pair import Pair
+from .closure import Closure
+from .utils import Utils
+
 
 class Native (Procedure):
 
@@ -37,7 +38,7 @@ class Native (Procedure):
     arg0 = Native.ARG(args)
     Native.check_argument_type("apply", Pair, arg0)
 
-    nargs = scheme.Scheme.va_list(arg0, env, False)
+    nargs = Scheme.va_list(arg0, env, False)
 
     return proc.invoke(nargs, env)
 
@@ -74,7 +75,7 @@ class Native (Procedure):
 
     if isinstance(arg0, str):
       name = arg0
-      env.set(name, scheme.Scheme.evaluate(arg1, env))
+      env.set(name, Scheme.evaluate(arg1, env))
       return name
     elif isinstance(arg0, Pair):
       name = arg0.car
@@ -91,7 +92,7 @@ class Native (Procedure):
 
   @staticmethod
   def call_native(method, v, env):
-    return scheme.Scheme.vSymbols.get(method).invoke(v, env)
+    return Scheme.vSymbols.get(method).invoke(v, env)
 
   @staticmethod
   def equal(args, env):
@@ -117,12 +118,12 @@ class Native (Procedure):
     proc1 = Native.ARG(args)
     proc2 = Native.ARG(args)
 
-    ret = scheme.Scheme.evaluate(predicate, env)
+    ret = Scheme.evaluate(predicate, env)
 
     if ret:
-      return scheme.Scheme.evaluate(proc1, env)
+      return Scheme.evaluate(proc1, env)
     else:
-      return scheme.Scheme.evaluate(proc2, env)
+      return Scheme.evaluate(proc2, env)
 
   @staticmethod
   def _lambda(args, env):
@@ -139,7 +140,7 @@ class Native (Procedure):
     path = val
     try:
       with open(path) as f:
-        scheme.Scheme.read_input(f.read(), None, env)
+        Scheme.read_input(f.read(), None, env)
     except:
       raise ValueError("unable to open file %s" % (val))
 
@@ -160,7 +161,7 @@ class Native (Procedure):
 
   @staticmethod
   def list(args, env):
-    p = None, pt = None
+    p = pt = None
     while len(args) > 0:
       o = Native.ARG(args)
       if not p:
@@ -186,11 +187,11 @@ class Native (Procedure):
 
   @staticmethod
   def quote(args, env):
-    return scheme.Scheme.vSymbols.get("list").invoke(args, env)
+    return Scheme.vSymbols.get("list").invoke(args, env)
 
   @staticmethod
   def binary_op(op, args, env):
-    if op[0] == '<' or op[0] == '>' and len(op) == 1 or op[1] == '=':
+    if op[0] == '<' or op[0] == '>' and len(op) == 1 or len(op) == 2 and op[1] == '=':
       n1 = args.pop(0)
       n2 = args.pop(0)
 

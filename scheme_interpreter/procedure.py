@@ -1,9 +1,9 @@
-import scheme
-import enviroment
+from .scheme import *
+from .enviroment import *
 
 class Procedure:
   Instances = 1
-  
+
   def __init__(self, _id, code, env):
     self.id = _id
     self.code = code

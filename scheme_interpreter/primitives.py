@@ -1,5 +1,5 @@
-from symbols import Symbols
-from native import Native
+from .symbols import Symbols
+from .native import Native
 
 class Primitives:
 
@@ -7,7 +7,7 @@ class Primitives:
   def install():
     Symbols.set("#t", True)
     Symbols.set("#f", False)
-    
+
     Symbols.set("apply", Native("apply", Native.apply, 2))
     Symbols.set("car", Native("car", Native.car, 1))
     Symbols.set("cdr", Native("cdr", Native.cdr, 1))
@@ -21,7 +21,7 @@ class Primitives:
     Symbols.set("list", Native("list", Native.list, -1))
     Symbols.set("list?", Native("list?", Native.islist, 1))
     Symbols.set("load", Native("load", Native.load, 1))
-    
+
     Symbols.set("null?", Native("null?", Native.isnull, 1))
 	#Symbols.set("macro", Native("macro", Native.macro, 2)
 

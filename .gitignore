@@ -1,2 +1,6 @@
+build
+dist
+src/__pycache__
 __pycache__
+scheme_interpreter.egg-info
 .vscode

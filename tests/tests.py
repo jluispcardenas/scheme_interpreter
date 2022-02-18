@@ -1,10 +1,14 @@
 import unittest
-from scheme_interpreter import *
+from scheme_interpreter.primitives import Primitives
+from scheme_interpreter.parse import Parse
+from scheme_interpreter.enviroment import Environment
+from scheme_interpreter.scheme import Scheme
+from scheme_interpreter.utils import *
 
 class Tests(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(Tests, self).__init__(*args, **kwargs)
-        installPrim.InstallPrim.install()
+        Primitives.install()
 
     def test_sum(self):
         self.assertEqual(self.execute("(+ 4 3)"), "7", "Should be 7")
@@ -35,10 +39,9 @@ class Tests(unittest.TestCase):
         parsed = Parse.parse(exp)
         env = Environment([], [], None)
 
-        result = scheme.Scheme.evaluate(parsed, env)
+        result = Scheme.evaluate(parsed, env)
 
         return Utils.stringtify(result)
 
-
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

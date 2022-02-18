@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+
+from scheme_interpreter.primitives import Primitives
+from scheme_interpreter.parse import Parse
+from scheme_interpreter.enviroment import Environment
+from scheme_interpreter.scheme import Scheme
+
+env = Environment([], [], None)
+Primitives.install()
+
+print("Scheme interpreter 0.010 by JLPC")
+
+Scheme.read_input(env)

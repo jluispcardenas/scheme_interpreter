@@ -1,5 +1,5 @@
-from lexer import Lexer
-from pair import Pair
+from .lexer import Lexer
+from .pair import Pair
 
 class Parse:
 
@@ -11,7 +11,7 @@ class Parse:
     if len(tokens) > 0:
       exp = Parse.sexp(tokens)
       stack.append(exp)
-    
+
     if len(stack) == 1:
       return stack.pop()
     else:
@@ -29,12 +29,12 @@ class Parse:
       while len(tokens) > 0 and nx != "\"":
         ss += nx
         nx = tokens.pop(0)
-      
+
       if nx != "\"":
         raise ValueError("Unterminated string constant")
-    
+
       return ss
-    elif isinstance(o, str) and o == "(": 
+    elif isinstance(o, str) and o == "(":
       return Parse.next_list(tokens)
     elif isinstance(o, str) and o == "'": #casiquote
       return Pair("quote", Parse.sexp(tokens))
@@ -44,7 +44,7 @@ class Parse:
           return float(o)
         else:
           return int(o)
-      
+
       return o
 
   @staticmethod
@@ -54,13 +54,13 @@ class Parse:
     except ValueError:
       return False
     else:
-      return True   
+      return True
 
   @staticmethod
   def next_list(tokens):
     cur = Parse.sexp(tokens)
-    
-    p = None, pt = None
+
+    p = pt = None
     while len(tokens) > 0 and cur != None and cur != ")":
       if p == None:
         p = Pair(cur, None)
@@ -68,7 +68,7 @@ class Parse:
       else:
         pt.cdr = Pair(cur, None)
         pt = pt.cdr
-      
+
       cur = Parse.sexp(tokens)
-  
+
     return p

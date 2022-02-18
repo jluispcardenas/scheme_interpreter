@@ -1,6 +1,6 @@
-import scheme
-from enviroment import Environment
-from procedure import Procedure
+from .scheme import *
+from .enviroment import Environment
+from .procedure import Procedure
 
 class Closure (Procedure):
   Instances = 1

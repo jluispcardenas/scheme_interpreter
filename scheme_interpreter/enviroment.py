@@ -1,4 +1,4 @@
-from utils import Utils
+from .utils import Utils
 
 class Environment:
   def __init__(self, _vars, vals, parent):
